@@ -30,19 +30,25 @@ class GhostPumpkinPath(Node):
         # while not self.cli.wait_for_service(timeout_sec=1.0):
         #     self.get_logger().info('generate_motion_plan service not available, waiting again...')
 
-        # TODO: Redefine publisher for new tool path
-        # 9 tool paths: bottom_left, bottom_right, left_eye, right_eye, top_left, top_right, triangle_1, triangle_2, triangle_3
         #Publisher
-        # self.pose_array_publisher_ = self.create_publisher(PoseArray, 'plot_carve', 10)
-        # self.line_publisher_ = self.create_publisher(Marker, 'plot_carve_lines', 10)
-        # self.pose_array_publisher_1_ = self.create_publisher(PoseArray, 'plot_carve_1', 10)
-        # self.line_publisher_1_ = self.create_publisher(Marker, 'plot_carve_lines_1', 10)
-        # self.pose_array_publisher_2_ = self.create_publisher(PoseArray, 'plot_carve_2', 10)
-        # self.line_publisher_2_ = self.create_publisher(Marker, 'plot_carve_lines_2', 10)
-        # self.pose_array_publisher_3_ = self.create_publisher(PoseArray, 'plot_carve_3', 10)
-        # self.line_publisher_3_ = self.create_publisher(Marker, 'plot_carve_lines_3', 10)
-        # self.pose_array_publisher_4_ = self.create_publisher(PoseArray, 'plot_carve_4', 10)
-        # self.line_publisher_4_ = self.create_publisher(Marker, 'plot_carve_lines_4', 10)
+        self.pose_array_publisher_ = self.create_publisher(PoseArray, 'plot_carve', 10)
+        self.line_publisher_ = self.create_publisher(Marker, 'plot_carve_lines', 10)
+        self.pose_array_publisher_1_ = self.create_publisher(PoseArray, 'plot_carve_1', 10)
+        self.line_publisher_1_ = self.create_publisher(Marker, 'plot_carve_lines_1', 10)
+        self.pose_array_publisher_2_ = self.create_publisher(PoseArray, 'plot_carve_2', 10)
+        self.line_publisher_2_ = self.create_publisher(Marker, 'plot_carve_lines_2', 10)
+        self.pose_array_publisher_3_ = self.create_publisher(PoseArray, 'plot_carve_3', 10)
+        self.line_publisher_3_ = self.create_publisher(Marker, 'plot_carve_lines_3', 10)
+        self.pose_array_publisher_4_ = self.create_publisher(PoseArray, 'plot_carve_4', 10)
+        self.line_publisher_4_ = self.create_publisher(Marker, 'plot_carve_lines_4', 10)
+        self.pose_array_publisher_5_ = self.create_publisher(PoseArray, 'plot_carve_5', 10)
+        self.line_publisher_5_ = self.create_publisher(Marker, 'plot_carve_lines_5', 10)
+        self.pose_array_publisher_6_ = self.create_publisher(PoseArray, 'plot_carve_6', 10)
+        self.line_publisher_6_ = self.create_publisher(Marker, 'plot_carve_lines_6', 10)
+        self.pose_array_publisher_7_ = self.create_publisher(PoseArray, 'plot_carve_7', 10)
+        self.line_publisher_7_ = self.create_publisher(Marker, 'plot_carve_lines_7', 10)
+        self.pose_array_publisher_8_ = self.create_publisher(PoseArray, 'plot_carve_8', 10)
+        self.line_publisher_8_ = self.create_publisher(Marker, 'plot_carve_lines_8', 10)
 
         # Initialize Request Structure
         self.req = PlanMotion.Request()
@@ -55,7 +61,6 @@ class GhostPumpkinPath(Node):
         return self.future.result()
 
     def generate_tool_path_bottom_left(self):
-        # WIP
         pumpkin_segment = PoseArray()
         pumpkin_segment.header.frame_id = "pumpkin_face"
 
@@ -98,6 +103,7 @@ class GhostPumpkinPath(Node):
         for x in range(0.12, 0.15, 0.005):
             ycoord = 16.67*(x-0.12)^2+0.06
             pumpkin_segment.poses.append(self.add_waypoint(x,ycoord,PUSH_IN))
+        
         pumpkin_segment.poses.append(self.add_waypoint(0.15, 0.075, PUSH_IN))
         pumpkin_segment.poses.append(self.add_waypoint(0.15, 0.0, PUSH_IN))
         pumpkin_segment.poses.append(self.add_waypoint(0.12, 0.0, PUSH_IN))
@@ -155,47 +161,128 @@ class GhostPumpkinPath(Node):
         return pumpkin_segment
     
     def generate_tool_path_top_left(self):
-        # TODO
         pumpkin_segment = PoseArray()
         pumpkin_segment.header.frame_id = "pumpkin_face"
 
         #Origin is bottom left corner
+        pumpkin_segment.poses.append(self.add_waypoint(0.0, 0.085, 0.0))
+
+        #Push tool in
+        pumpkin_segment.poses.append(self.add_waypoint(0.0,0.085,PUSH_IN))
+
+        # Draw out shape
+        pumpkin_segment.poses.append(self.add_waypoint(0.0,0.12,PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.06,0.12,PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.06,0.1174,PUSH_IN))
+
+        for x in range(110, 180, 10):
+            xcoord = 0.075 + 0.045*math.cos(x*(math.pi/180))
+            ycoord = 0.075 + 0.045*math.sin(x*(math.pi/180))
+            pumpkin_segment.poses.append(self.add_waypoint(xcoord,ycoord,PUSH_IN))
+
+        pumpkin_segment.poses.append(self.add_waypoint(0.03,0.075,PUSH_IN))
+
+        for x in range(0.03, 0.0, -0.005):
+            ycoord = 11*(x-0.03)^2+0.075
+            pumpkin_segment.poses.append(self.add_waypoint(x,ycoord,PUSH_IN))
+
+        pumpkin_segment.poses.append(self.add_waypoint(0.0,0.085,PUSH_IN))
+
+        # Pull tool out
+        pumpkin_segment.poses.append(self.add_waypoint(0.0, 0.085, 0.0))
 
         return pumpkin_segment
 
     def generate_tool_path_top_right(self):
-        # TODO
         pumpkin_segment = PoseArray()
         pumpkin_segment.header.frame_id = "pumpkin_face"
 
         #Origin is bottom left corner
+        pumpkin_segment.poses.append(self.add_waypoint(0.15, 0.085, 0.0))
+
+        #Push tool in
+        pumpkin_segment.poses.append(self.add_waypoint(0.15,0.085,PUSH_IN))
+
+        # Draw out shape
+        pumpkin_segment.poses.append(self.add_waypoint(0.15,0.12,PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.09,0.12,PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.09,0.1174,PUSH_IN))
+
+        for x in range(70, 0, -10):
+            xcoord = 0.075 + 0.045*math.cos(x*(math.pi/180))
+            ycoord = 0.075 + 0.045*math.sin(x*(math.pi/180))
+            pumpkin_segment.poses.append(self.add_waypoint(xcoord,ycoord,PUSH_IN))
+
+        pumpkin_segment.poses.append(self.add_waypoint(0.12,0.075,PUSH_IN))
+
+        for x in range(0.12, 0.15, 0.005):
+            ycoord = 11*(x-0.12)^2+0.075
+            pumpkin_segment.poses.append(self.add_waypoint(x,ycoord,PUSH_IN))
+
+        pumpkin_segment.poses.append(self.add_waypoint(0.15,0.085,PUSH_IN))
+
+        # Pull tool out
+        pumpkin_segment.poses.append(self.add_waypoint(0.15, 0.085, 0.0))
 
         return pumpkin_segment
 
     def generate_tool_path_triangle_1(self):
-        # TODO
         pumpkin_segment = PoseArray()
         pumpkin_segment.header.frame_id = "pumpkin_face"
 
         #Origin is bottom left corner
+        pumpkin_segment.poses.append(self.add_waypoint(0.035, 0.0, 0.0))
+
+        # Push tool in
+        pumpkin_segment.poses.append(self.add_waypoint(0.035, 0.0, PUSH_IN))
+
+        # Draw out shape
+        pumpkin_segment.poses.append(self.add_waypoint(0.045, 0.015, PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.055, 0.0, PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.035, 0.0, PUSH_IN))
+
+        # Pull tool out
+        pumpkin_segment.poses.append(self.add_waypoint(0.035, 0.0, 0.0))
 
         return pumpkin_segment
 
     def generate_tool_path_triangle_2(self):
-        # TODO
         pumpkin_segment = PoseArray()
         pumpkin_segment.header.frame_id = "pumpkin_face"
 
         #Origin is bottom left corner
+        pumpkin_segment.poses.append(self.add_waypoint(0.065, 0.0, 0.0))
+
+        # Push tool in
+        pumpkin_segment.poses.append(self.add_waypoint(0.065, 0.0, PUSH_IN))
+
+        # Draw out shape
+        pumpkin_segment.poses.append(self.add_waypoint(0.075, 0.015, PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.085, 0.0, PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.065, 0.0, PUSH_IN))
+
+        # Pull tool out
+        pumpkin_segment.poses.append(self.add_waypoint(0.065, 0.0, 0.0))
 
         return pumpkin_segment
 
     def generate_tool_path_triangle_3(self):
-        # TODO
         pumpkin_segment = PoseArray()
         pumpkin_segment.header.frame_id = "pumpkin_face"
 
         #Origin is bottom left corner
+        pumpkin_segment.poses.append(self.add_waypoint(0.095, 0.0, 0.0))
+
+        # Push tool in
+        pumpkin_segment.poses.append(self.add_waypoint(0.095, 0.0, PUSH_IN))
+
+        # Draw out shape
+        pumpkin_segment.poses.append(self.add_waypoint(0.105, 0.015, PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.115, 0.0, PUSH_IN))
+        pumpkin_segment.poses.append(self.add_waypoint(0.095, 0.0, PUSH_IN))
+
+        # Pull tool out
+        pumpkin_segment.poses.append(self.add_waypoint(0.095, 0.0, 0.0))
 
         return pumpkin_segment
     
@@ -234,35 +321,42 @@ class GhostPumpkinPath(Node):
         return waypoint
 
 def main(args=None):
-
-
     rclpy.init(args=args)
 
     # Instantiate TPP Class
     minimal_client = GhostPumpkinPath()
 
-    # TODO: Update to correct toolpaths
     # Generate Pumpkin Toolpath
-    tool_path_left = minimal_client.generate_tool_path_left()
-    tool_path_right = minimal_client.generate_tool_path_right()
+    tool_path_bottom_left = minimal_client.generate_tool_path_bottom_left()
+    tool_path_bottom_right = minimal_client.generate_tool_path_bottom_right()
+    tool_path_top_left = minimal_client.generate_tool_path_top_left()
+    tool_path_top_right = minimal_client.generate_tool_path_top_right()
     tool_path_left_eye = minimal_client.generate_tool_path_left_eye()
     tool_path_right_eye = minimal_client.generate_tool_path_right_eye()
-    tool_path_mouth = minimal_client.generate_tool_path_mouth()
-    minimal_client.req.path = [tool_path_left_eye, tool_path_right_eye, tool_path_mouth, tool_path_left, tool_path_right]
+    tool_path_triangle_1 = minimal_client.generate_tool_path_triangle_1()
+    tool_path_triangle_2 = minimal_client.generate_tool_path_triangle_2()
+    tool_path_triangle_3 = minimal_client.generate_tool_path_triangle_3()
+    minimal_client.req.path = [tool_path_left_eye, tool_path_right_eye, tool_path_triangle_1, tool_path_triangle_2, tool_path_triangle_3, tool_path_bottom_left, tool_path_bottom_right, tool_path_top_left, tool_path_top_right]
 
-
-    # TODO: Update to correct toolpaths
     # Visualize toolpath
-    minimal_client.pose_array_publisher_.publish(tool_path_left)
-    minimal_client.line_publisher_.publish(minimal_client.plot_rviz(tool_path_left))
-    minimal_client.pose_array_publisher_1_.publish(tool_path_right)
-    minimal_client.line_publisher_1_.publish(minimal_client.plot_rviz(tool_path_right))
+    minimal_client.pose_array_publisher_.publish(tool_path_bottom_left)
+    minimal_client.line_publisher_.publish(minimal_client.plot_rviz(tool_path_bottom_left))
+    minimal_client.pose_array_publisher_1_.publish(tool_path_bottom_right)
+    minimal_client.line_publisher_1_.publish(minimal_client.plot_rviz(tool_path_bottom_right))
+    minimal_client.pose_array_publisher_.publish(tool_path_top_left)
+    minimal_client.line_publisher_.publish(minimal_client.plot_rviz(tool_path_top_left))
+    minimal_client.pose_array_publisher_1_.publish(tool_path_top_right)
+    minimal_client.line_publisher_1_.publish(minimal_client.plot_rviz(tool_path_top_right))
     minimal_client.pose_array_publisher_2_.publish(tool_path_left_eye)
     minimal_client.line_publisher_2_.publish(minimal_client.plot_rviz(tool_path_left_eye))
     minimal_client.pose_array_publisher_3_.publish(tool_path_right_eye)
     minimal_client.line_publisher_3_.publish(minimal_client.plot_rviz(tool_path_right_eye))
-    minimal_client.pose_array_publisher_4_.publish(tool_path_mouth)
-    minimal_client.line_publisher_4_.publish(minimal_client.plot_rviz(tool_path_mouth))
+    minimal_client.pose_array_publisher_4_.publish(tool_path_triangle_1)
+    minimal_client.line_publisher_4_.publish(minimal_client.plot_rviz(tool_path_triangle_1))
+    minimal_client.pose_array_publisher_4_.publish(tool_path_triangle_2)
+    minimal_client.line_publisher_4_.publish(minimal_client.plot_rviz(tool_path_triangle_2))
+    minimal_client.pose_array_publisher_4_.publish(tool_path_triangle_3)
+    minimal_client.line_publisher_4_.publish(minimal_client.plot_rviz(tool_path_triangle_3))
     # minimal_client.get_logger().info("Attempted to publish")
     
     # Write out toolpath to YAML
@@ -291,10 +385,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
-
-# #Make circle
-#         for x in range(90, 450, 15):
-#             xcoord = 0.0585 + (math.sqrt(0.000025))*math.sin(x*(math.pi/180))
-#             ycoord = (0.15-0.0655) - (math.sqrt(0.000025))*math.cos(x*(math.pi/180))
-#             pumpkin_segment.poses.append(self.add_waypoint(xcoord,ycoord,PUSH_IN))
