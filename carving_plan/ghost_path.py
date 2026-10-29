@@ -73,9 +73,9 @@ class GhostPumpkinPath(Node):
         #Draw out shape
         pumpkin_segment.poses.append(self.add_waypoint(0.0, 0.075, PUSH_IN))
 
-        for x in range(0, 0.03, 0.005):
-            ycoord = 16.67*(x-0.03)^2+0.06
-            pumpkin_segment.poses.append(self.add_waypoint(x,ycoord,PUSH_IN))
+        for x in range(0, 30, 5):
+            ycoord = 16.67*((x*10**-3)-0.03)**2+0.06
+            pumpkin_segment.poses.append(self.add_waypoint((x*10**-3),ycoord,PUSH_IN))
 
         pumpkin_segment.poses.append(self.add_waypoint(0.03, 0.06, PUSH_IN))
         pumpkin_segment.poses.append(self.add_waypoint(0.03, 0.0, PUSH_IN))
@@ -100,9 +100,9 @@ class GhostPumpkinPath(Node):
 
         #Draw out shape
         pumpkin_segment.poses.append(self.add_waypoint(0.12, 0.06, PUSH_IN))
-        for x in range(0.12, 0.15, 0.005):
-            ycoord = 16.67*(x-0.12)^2+0.06
-            pumpkin_segment.poses.append(self.add_waypoint(x,ycoord,PUSH_IN))
+        for x in range(120, 150, 5):
+            ycoord = 16.67*((x*10**-3)-0.12)**2+0.06
+            pumpkin_segment.poses.append(self.add_waypoint((x*10**-3),ycoord,PUSH_IN))
         
         pumpkin_segment.poses.append(self.add_waypoint(0.15, 0.075, PUSH_IN))
         pumpkin_segment.poses.append(self.add_waypoint(0.15, 0.0, PUSH_IN))
@@ -182,15 +182,16 @@ class GhostPumpkinPath(Node):
 
         pumpkin_segment.poses.append(self.add_waypoint(0.03,0.075,PUSH_IN))
 
-        for x in range(0.03, 0.0, -0.005):
-            ycoord = 11*(x-0.03)^2+0.075
-            pumpkin_segment.poses.append(self.add_waypoint(x,ycoord,PUSH_IN))
+        for x in range(30, 0, -5):
+            ycoord = 11*((x*10**-3)-0.03)**2+0.075
+            pumpkin_segment.poses.append(self.add_waypoint((x*10**-3),ycoord,PUSH_IN))
 
         pumpkin_segment.poses.append(self.add_waypoint(0.0,0.085,PUSH_IN))
 
         # Pull tool out
         pumpkin_segment.poses.append(self.add_waypoint(0.0, 0.085, 0.0))
 
+        self.get_logger().info("Completed Tool Path Top Left")
         return pumpkin_segment
 
     def generate_tool_path_top_right(self):
@@ -215,15 +216,16 @@ class GhostPumpkinPath(Node):
 
         pumpkin_segment.poses.append(self.add_waypoint(0.12,0.075,PUSH_IN))
 
-        for x in range(0.12, 0.15, 0.005):
-            ycoord = 11*(x-0.12)^2+0.075
-            pumpkin_segment.poses.append(self.add_waypoint(x,ycoord,PUSH_IN))
+        for x in range(120, 150, 5):
+            ycoord = 11*((x*10**-3)-0.12)**2+0.075
+            pumpkin_segment.poses.append(self.add_waypoint((x*10**-3),ycoord,PUSH_IN))
 
         pumpkin_segment.poses.append(self.add_waypoint(0.15,0.085,PUSH_IN))
 
         # Pull tool out
         pumpkin_segment.poses.append(self.add_waypoint(0.15, 0.085, 0.0))
 
+        self.get_logger().info("Completed Tool Path Top Right")
         return pumpkin_segment
 
     def generate_tool_path_triangle_1(self):
@@ -244,6 +246,7 @@ class GhostPumpkinPath(Node):
         # Pull tool out
         pumpkin_segment.poses.append(self.add_waypoint(0.035, 0.0, 0.0))
 
+        self.get_logger().info("Completed Tool Path Triangle 1")
         return pumpkin_segment
 
     def generate_tool_path_triangle_2(self):
@@ -264,6 +267,7 @@ class GhostPumpkinPath(Node):
         # Pull tool out
         pumpkin_segment.poses.append(self.add_waypoint(0.065, 0.0, 0.0))
 
+        self.get_logger().info("Completed Tool Path Triangle 2")
         return pumpkin_segment
 
     def generate_tool_path_triangle_3(self):
@@ -284,6 +288,7 @@ class GhostPumpkinPath(Node):
         # Pull tool out
         pumpkin_segment.poses.append(self.add_waypoint(0.095, 0.0, 0.0))
 
+        self.get_logger().info("Completed Tool Path Triangle 3")
         return pumpkin_segment
     
     def plot_rviz(self, tool_path:PoseArray):
@@ -301,7 +306,6 @@ class GhostPumpkinPath(Node):
         tool_path_lines.color.r = 1.0
         tool_path_lines.color.g = 1.0
         tool_path_lines.color.b = 1.0
-
 
         # Extract Points
         for pose in tool_path.poses:
@@ -366,12 +370,6 @@ def main(args=None):
     # Send Motion Plan Request
     minimal_client.get_logger().info("Attempting to call motion planner!")
     motion_plan_response = minimal_client.send_request()
-
-
-    # Print info about reponse
-    # TODO
-    # TODO
-    # minimal_client.get_logger().info()
 
     trajectory_msg = motion_plan_response.trajectory
 

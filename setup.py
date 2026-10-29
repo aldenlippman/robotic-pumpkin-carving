@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'helldivers = carving_plan.helldivers_path:main',
-            'ghost = carving_plan.ghost_path:main'
+            'ghost = carving_plan.ghost_path:main',
         ],
     },
 )
